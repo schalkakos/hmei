@@ -1,0 +1,17 @@
+.SetUpWrapper{
+  padding: 20px;
+  background-color: #fff;
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.SetUpWrapper > span{
+  font-weight: 700;
+}
+
+.SetUpWrapper > span {
+  display: inline-block;
+  margin-bottom: 20px;;
+}

@@ -1,0 +1,15 @@
+.PlayerWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.PlayerNameInput {
+  margin-right: 20px;
+  width: 200px !important;
+}
+
+.Form {
+  display: flex;
+  align-items: center;
+}
