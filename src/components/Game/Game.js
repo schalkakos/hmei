@@ -4,12 +4,12 @@ import styles from "./Game.module.css";
 import Gameplay from "./Gameplay/Gameplay";
 import GameSetup from "./GameSetup/GameSetup";
 
-import { Dropdown, DropdownButton, Form } from "react-bootstrap";
 
 const Game = (props) => {
   const [gamePhase, setGamePhase] = useState("setup");
 
   const changePhaseClickHandler = (value) => {
+    
     setGamePhase(value);
   };
 

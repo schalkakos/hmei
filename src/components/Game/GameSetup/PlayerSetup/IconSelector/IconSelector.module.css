@@ -1,0 +1,11 @@
+.IconSelectorWrapper {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.IconSelectorWrapper > input {
+  margin-right: 5px;
+
+}
+

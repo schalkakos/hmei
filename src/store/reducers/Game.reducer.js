@@ -4,9 +4,10 @@ import update from "immutability-helper";
 const initalStore = {
   mapSize: 10,
   playersData: [
-    { name: "Player 1", shape: null },
-    { name: "Player 2", shape: null },
+    { id: 1, name: "Player 1", icon: null, fields: []},
+    { id: 2, name: "Player 2", icon: null, fields: [] },
   ],
+  isGameOver: false,
 };
 
 const reducer = (state = initalStore, action) => {
@@ -18,13 +19,49 @@ const reducer = (state = initalStore, action) => {
       });
     }
     case actionTypes.ADD_PLAYER: {
+      const nextPlayerPosition = state.playersData.length + 1;
+
       return update(state, {
         playersData: {
           $push: [
-            { name: `Player ${state.playersData.length + 1}`, shape: null }
+            {
+              id: nextPlayerPosition,
+              name: `Player ${nextPlayerPosition}`,
+              icon: null,
+              fields: []
+            },
           ],
         },
       });
+    }
+    case actionTypes.CHANGE_PLAYER_ICON: {
+      const { icon, playerId } = action;
+      const playerIndex = state.playersData.findIndex((value) => {
+        return value.id === playerId;
+      });
+
+      return update(state, {
+        playersData: {
+          [playerIndex]: {
+            icon: { $set: icon },
+          },
+        },
+      });
+    }
+    case actionTypes.CHANGE_PLAYER_NAME: {
+      const {newPlayerName, playerId} = action;
+
+      const playerIndex = state.playersData.findIndex((value) => {
+        return value.id === playerId;
+      });
+
+      return update(state, {
+        playersData: {
+          [playerIndex]: {
+            name: {$set: newPlayerName}
+          }
+        }
+      })
     }
     default:
       return state;

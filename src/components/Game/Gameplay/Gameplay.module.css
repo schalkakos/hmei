@@ -1,0 +1,28 @@
+.GameplayWrapper {
+  padding: 20px;
+  background-color: #fff;
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.GameplayWrapper > span {
+  font-weight: 700;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.GameFieldWrapper {
+  display: flex;
+  border-left: 1px solid #000;
+  border-top: 1px solid #000;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
+
+.GamePlayActions {
+  display: flex;
+  justify-content: space-between;
+  width: 280px;
+}

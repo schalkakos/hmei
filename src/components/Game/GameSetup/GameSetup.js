@@ -1,52 +1,62 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/Game.actions";
 
-import { InputGroup, FormControl, Button } from "react-bootstrap";
-import { BsCircle, BsTriangle } from "react-icons/bs";
-import { GrClose } from "react-icons/gr";
-import { FiHexagon } from "react-icons/fi";
+import { Button, Form } from "react-bootstrap";
 import styles from "./GameSetup.module.css";
 import PlayerSetup from "./PlayerSetup/PlayerSetup";
-import AddPlayerButton from "./PlayerSetup/AddPlayerButton/AddPlayerButton";
+import AddPlayerButton from "./AddPlayerButton/AddPlayerButton";
 
 const GameSetup = (props) => {
-  const { changePhase, mapSize, playersData, onChangeMapSize, onAddPlayer } = props;
-  // const [playerCount, setPlayerCount] = useState(2);
-  const [availableIcons, setAvailableIcons] = useState([
-    { shape: "circle", available: true, component: <BsCircle /> },
-    { shape: "cross", available: true, component: <GrClose /> },
-    { shape: "triangle", available: true, component: <BsTriangle /> },
-    { shape: "hexagon", available: true, component: <FiHexagon /> },
-  ]);
+  const {
+    changePhase,
+    mapSize,
+    playersData,
+    onChangeMapSize,
+    onAddPlayer,
+  } = props;
+  let availableIcons = [
+    { icon: "circle", available: true },
+    { icon: "cross", available: true },
+    { icon: "triangle", available: true },
+    { icon: "hexagon", available: true },
+  ];
 
-  const BoardSizeKeyDownHandler = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      event.target.blur();
+  availableIcons = availableIcons.map((iconValue) => {
+    const isIconUsed = playersData.some((playerValue) => {
+      if (playerValue.icon === iconValue.icon) {
+        return true;
+      }
+      return false;
+    });
+    if (isIconUsed) {
+      iconValue.available = false;
     }
-  };
+    return iconValue;
+  });
+
+  // const BoardSizeKeyDownHandler = (event) => {
+  //   if (event.key === "Enter") {
+  //     event.preventDefault();
+  //     event.target.blur();
+  //   }
+  // };
 
   const addNewPlayerClickHandler = () => {
     onAddPlayer();
   };
 
   const players = playersData.map((value, i) => {
-    // console.log(i);
     return (
       <PlayerSetup
-        name={value.name}
-        shape={value.shape}
+        playerData={value}
         icons={availableIcons}
-        setIcons={setAvailableIcons}
-        playerPosition={i + 1}
         key={i}
       />
     );
   });
 
-
-  console.log(players.length);
+  // console.log(players.length);
   if (players.length < 4) {
     players.push(
       <AddPlayerButton
@@ -57,31 +67,29 @@ const GameSetup = (props) => {
   }
 
   // console.log(players);
+  const selectOptions = [...Array(11)].map((value, index) => {
+    return <option key={index}>{index + 10}</option>;
+  });
 
   return (
     <div className={styles.SetUpWrapper}>
       <span>Set up the game</span>
+      {/* <span>Set up the game</span> */}
+      
       <div className={styles.PlayerWrapper}>
         {players}
-
-        {/* <input type="number"></input> */}
-        <InputGroup className="mb-3">
-          <InputGroup.Prepend>
-            <InputGroup.Text>{`${mapSize} x ${mapSize}`}</InputGroup.Text>
-          </InputGroup.Prepend>
-          <FormControl
-            onBlur={(event) => {
-              onChangeMapSize(event.target.value);
-            }}
-            onKeyDown={BoardSizeKeyDownHandler}
-            placeholder="Board size(default is 10)"
-            aria-label="Board size(default is 10)"
-          />
-        </InputGroup>
-        <Button variant="success" onClick={changePhase}>
-          Start Game
-        </Button>
+        <Form onChange={(event) => onChangeMapSize(event.target.value)}>
+          <Form.Group controlId="exampleForm.SelectCustom">
+            <Form.Label>{`Board size: ${mapSize} x ${mapSize}`}</Form.Label>
+            <Form.Control as="select" custom>
+              {selectOptions}
+            </Form.Control>
+          </Form.Group>
+        </Form>
       </div>
+      <Button variant="success" onClick={changePhase}>
+        Start Game
+      </Button>
     </div>
   );
 };
