@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/Game.actions";
 
@@ -15,70 +15,85 @@ const GameSetup = (props) => {
     onChangeMapSize,
     onAddPlayer,
   } = props;
-  let availableIcons = [
+  const [iconError, setIconError] = useState(false);
+  const [availableIcons, setAvailableIcons] = useState([
     { icon: "circle", available: true },
-    { icon: "cross", available: true },
+    { icon: "star", available: true },
     { icon: "triangle", available: true },
     { icon: "hexagon", available: true },
-  ];
+  ]);
 
-  availableIcons = availableIcons.map((iconValue) => {
-    const isIconUsed = playersData.some((playerValue) => {
-      if (playerValue.icon === iconValue.icon) {
-        return true;
-      }
-      return false;
+  useEffect(() => {
+    setAvailableIcons((prevAvailableIcons) => {
+      return prevAvailableIcons.map((iconValue) => {
+        const updatedIconValue = { ...iconValue };
+        const isIconUsed = playersData.some((playerValue) => {
+          if (playerValue.icon === updatedIconValue.icon) {
+            return true;
+          }
+          return false;
+        });
+
+        if (isIconUsed) {
+          updatedIconValue.available = false;
+        } else {
+          updatedIconValue.available = true;
+        }
+        return updatedIconValue;
+      });
     });
-    if (isIconUsed) {
-      iconValue.available = false;
+  }, [playersData]);
+
+
+  const StartButtonClickHandler = () => {
+    const playersChoseIcon = playersData.every((value) => {
+      return value.icon ? true : false;
+    });
+
+    if (playersChoseIcon) {
+      changePhase();
+    } else {
+      setIconError(true);
     }
-    return iconValue;
-  });
-
-  // const BoardSizeKeyDownHandler = (event) => {
-  //   if (event.key === "Enter") {
-  //     event.preventDefault();
-  //     event.target.blur();
-  //   }
-  // };
-
-  const addNewPlayerClickHandler = () => {
-    onAddPlayer();
   };
 
   const players = playersData.map((value, i) => {
+    const deletable = i > 1;
     return (
       <PlayerSetup
         playerData={value}
         icons={availableIcons}
         key={i}
+        deletable={deletable}
       />
     );
   });
 
-  // console.log(players.length);
   if (players.length < 4) {
     players.push(
       <AddPlayerButton
-        addNewPlayer={addNewPlayerClickHandler}
+        addNewPlayer={onAddPlayer}
         key={players.length + 2}
       />
     );
   }
 
-  // console.log(players);
-  const selectOptions = [...Array(11)].map((value, index) => {
+  const selectOptions = [...Array(11)].map((_, index) => {
     return <option key={index}>{index + 10}</option>;
   });
 
   return (
     <div className={styles.SetUpWrapper}>
-      <span>Set up the game</span>
+      <div className={styles.Title}>
+        <span>Set up the game</span>
+        {iconError ? <span>All players must chose an icon</span> : null}
+      </div>
+
       {/* <span>Set up the game</span> */}
-      
+
       <div className={styles.PlayerWrapper}>
         {players}
-        <Form onChange={(event) => onChangeMapSize(event.target.value)}>
+        <Form onChange={(event) => onChangeMapSize(+event.target.value)}>
           <Form.Group controlId="exampleForm.SelectCustom">
             <Form.Label>{`Board size: ${mapSize} x ${mapSize}`}</Form.Label>
             <Form.Control as="select" custom>
@@ -87,7 +102,7 @@ const GameSetup = (props) => {
           </Form.Group>
         </Form>
       </div>
-      <Button variant="success" onClick={changePhase}>
+      <Button variant="success" onClick={StartButtonClickHandler}>
         Start Game
       </Button>
     </div>

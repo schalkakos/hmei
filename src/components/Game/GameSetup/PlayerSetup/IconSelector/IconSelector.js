@@ -1,70 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import styles from "./IconSelector.module.css";
-import { BsCircle, BsTriangle } from "react-icons/bs";
-import { GrClose } from "react-icons/gr";
-import { FiHexagon } from "react-icons/fi";
-import { IconContext } from "react-icons";
+import PlayerIconDisplay from "../../../PlayerIconDisplay/PlayerIconDisplay";
 
 const IconSelector = (props) => {
-  const { value, selectorClicked, disabled, playerIcon} = props;
-  const [checked] = useState(value === playerIcon);
-  // console.log(value === playerIcon);
-  // console.log(checked);
-  // console.log(disabled);
-  // console.log("-")
+  const { value, selectorClicked, disabled, playerIcon, playerData } = props;
+  const [iconValue, setIconValue] = useState(value);
+  const [checked, setChecked] = useState(value === playerIcon);
 
-  const icon = () => {
-    switch (value) {
-      case "circle": {
-        return (
-          <IconContext.Provider value={{ size: "20px" }}>
-            <GrClose />
-          </IconContext.Provider>
-        );
-      }
-      case "cross": {
-        return (
-          <IconContext.Provider value={{ size: "20px" }}>
-            <BsCircle />
-          </IconContext.Provider>
-        );
-      }
-      case "triangle": {
-        return (
-          <IconContext.Provider value={{ size: "20px" }}>
-            <BsTriangle />
-          </IconContext.Provider>
-        );
-      }
-      case "hexagon": {
-        return (
-          <IconContext.Provider value={{ size: "20px" }}>
-            <FiHexagon />
-          </IconContext.Provider>
-        );
-      }
-      default: {
-        return (
-          <IconContext.Provider value={{ size: "20px" }}>
-            <BsCircle />
-          </IconContext.Provider>
-        );
-      }
-    }
-  };
+  useEffect(() => {
+    setIconValue(value);
+    setChecked(value === playerIcon);
+  }, [value, checked, playerIcon]);
 
   return (
     <div className={styles.IconSelectorWrapper}>
       <input
         type="radio"
-        name="icons"
-        value={value}
+        name={`icon ${playerData.id}`}
+        value={iconValue}
         onClick={selectorClicked}
         disabled={disabled}
         defaultChecked={checked}
       />
-      {icon()}
+      <PlayerIconDisplay icon={value} size="20px" />
     </div>
   );
 };

@@ -29,10 +29,9 @@ export const changePlayerName = (newPlayerName, playerId) => {
   };
 };
 
-export const savePlayerMove = (fieldId, playerId) => {
+export const removePlayer = (playerId) => {
   return {
-    type: actionTypes.SAVE_PLAYER_MOVE,
-    fieldId: fieldId,
+    type: actionTypes.REMOVE_PLAYER,
     playerId: playerId,
   };
 };

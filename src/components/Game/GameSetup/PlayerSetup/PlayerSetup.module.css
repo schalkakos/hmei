@@ -2,11 +2,32 @@
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  width: 430px;
+  position: relative;
 }
 
+.RemovePlayer {
+  position: absolute;
+  right: 0px;
+  background-color: #e6e6e6;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.RemovePlayer:hover {
+  background-color: #d0d0d0;
+  transition: 0.3s;
+}
+
+
 .PlayerNameInput {
-  margin-right: 20px;
-  width: 200px !important;
+  margin-right: 10px;
+  width: 170px !important;
 }
 
 .Form {

@@ -1,13 +1,13 @@
 import * as actionTypes from "../actions/actionsTypes";
 import update from "immutability-helper";
+import { getPlayerIndex } from '../uitls';
 
 const initalStore = {
   mapSize: 10,
   playersData: [
-    { id: 1, name: "Player 1", icon: null, fields: []},
-    { id: 2, name: "Player 2", icon: null, fields: [] },
+    { id: 1, name: "Player 1", icon: null },
+    { id: 2, name: "Player 2", icon: null }
   ],
-  isGameOver: false,
 };
 
 const reducer = (state = initalStore, action) => {
@@ -27,8 +27,7 @@ const reducer = (state = initalStore, action) => {
             {
               id: nextPlayerPosition,
               name: `Player ${nextPlayerPosition}`,
-              icon: null,
-              fields: []
+              icon: null
             },
           ],
         },
@@ -36,9 +35,7 @@ const reducer = (state = initalStore, action) => {
     }
     case actionTypes.CHANGE_PLAYER_ICON: {
       const { icon, playerId } = action;
-      const playerIndex = state.playersData.findIndex((value) => {
-        return value.id === playerId;
-      });
+      const playerIndex = getPlayerIndex(state, playerId);
 
       return update(state, {
         playersData: {
@@ -49,19 +46,28 @@ const reducer = (state = initalStore, action) => {
       });
     }
     case actionTypes.CHANGE_PLAYER_NAME: {
-      const {newPlayerName, playerId} = action;
+      const { newPlayerName, playerId } = action;
 
-      const playerIndex = state.playersData.findIndex((value) => {
-        return value.id === playerId;
-      });
+      const playerIndex = getPlayerIndex(state, playerId);
 
       return update(state, {
         playersData: {
           [playerIndex]: {
-            name: {$set: newPlayerName}
-          }
-        }
-      })
+            name: { $set: newPlayerName },
+          },
+        },
+      });
+    }
+    case actionTypes.REMOVE_PLAYER: {
+      const { playerId } = action;
+
+      const playerIndex = getPlayerIndex(state, playerId);
+      
+      return update(state, {
+        playersData: {
+          $splice: [[playerIndex, 1]],
+        },
+      });
     }
     default:
       return state;

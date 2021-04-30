@@ -4,12 +4,10 @@ import styles from "./Game.module.css";
 import Gameplay from "./Gameplay/Gameplay";
 import GameSetup from "./GameSetup/GameSetup";
 
-
 const Game = (props) => {
   const [gamePhase, setGamePhase] = useState("setup");
 
   const changePhaseClickHandler = (value) => {
-    
     setGamePhase(value);
   };
 
@@ -21,9 +19,12 @@ const Game = (props) => {
         }}
       />
     ) : (
-      <Gameplay />
+      <Gameplay
+        changePhase={() => {
+          changePhaseClickHandler("setup");
+        }}
+      />
     );
-  // console.log(content);
   return <div className={styles.GameWrapper}>{content}</div>;
 };
 

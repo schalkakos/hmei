@@ -1,44 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
 import * as actions from "../../../../store/actions/Game.actions";
-import { Form, FormControl } from "react-bootstrap";
-// import { BsCircle, BsTriangle } from "react-icons/bs";
-// import { GrClose } from "react-icons/gr";
-// import { FiHexagon } from "react-icons/fi";
+import { FormControl } from "react-bootstrap";
+import { GrClose } from "react-icons/gr";
+import { IconContext } from "react-icons";
 import styles from "./PlayerSetup.module.css";
 import IconSelector from "./IconSelector/IconSelector";
 
 const PlayerSetup = (props) => {
-  const { icons, playerData, onChangeIcon, onChangeName } = props;
+  const {
+    icons,
+    playerData,
+    onChangeIcon,
+    onChangeName,
+    deletable,
+    onRemovePlayer,
+  } = props;
+
   const [playerName, setPlayerName] = useState(playerData.name);
+
+  useEffect(() => {
+    setPlayerName(playerData.name);
+  }, [playerData.name]);
 
   const formOnClickHandler = (event) => {
     onChangeIcon(event.target.value, playerData.id);
   };
 
-
   const options = icons.map((value, index) => {
-    if (!value.available) {
-      return (
-        <IconSelector
-          playerIcon={playerData.icon}
-          disabled={true}
-          selectorClicked={formOnClickHandler}
-          value={value.icon}
-          key={`${playerData.id}` + index}
-        />
-      );
-    }
-    return (
+    return !value.available ? (
+      <IconSelector
+        playerIcon={playerData.icon}
+        playerData={playerData}
+        disabled={true}
+        selectorClicked={formOnClickHandler}
+        value={value.icon}
+        key={`${playerData.id}` + index}
+      />
+    ) : (
       <IconSelector
         selectorClicked={formOnClickHandler}
+        playerData={playerData}
+        playerIcon={playerData.icon}
         value={value.icon}
         disabled={false}
         key={`${playerData.id}` + index}
       />
     );
   });
+
+  const deleteButton = (
+    <div
+      className={styles.RemovePlayer}
+      onClick={() => onRemovePlayer(playerData.id)}
+    >
+      <IconContext.Provider value={{ size: "20px" }}>
+        <GrClose />
+      </IconContext.Provider>
+    </div>
+  );
 
   return (
     <div className={styles.PlayerWrapper}>
@@ -49,11 +70,10 @@ const PlayerSetup = (props) => {
         onFocus={(event) => event.target.select()}
         className={styles.PlayerNameInput}
       />
-      <Form>
-        <div key={`inline-radio`} className={styles.Form}>
-          {options}
-        </div>
-      </Form>
+      <div key={`inline-radio`} className={styles.Form}>
+        {options}
+      </div>
+      {deletable ? deleteButton : null}
     </div>
   );
 };
@@ -64,8 +84,11 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actions.changePlayerIcon(icon, playerId));
     },
     onChangeName: (newPlayerName, playerId) => {
-      dispatch(actions.changePlayerName(newPlayerName, playerId))
-    }
+      dispatch(actions.changePlayerName(newPlayerName, playerId));
+    },
+    onRemovePlayer: (playerId) => {
+      dispatch(actions.removePlayer(playerId));
+    },
   };
 };
 

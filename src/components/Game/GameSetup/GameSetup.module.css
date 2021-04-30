@@ -7,11 +7,19 @@
   flex-direction: column;
 }
 
-.SetUpWrapper > span{
-  font-weight: 700;
+.Title {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.SetUpWrapper > span {
+.Title > span{
+  font-weight: 700;
   display: inline-block;
-  margin-bottom: 20px;;
+}
+
+.Title > span:nth-child(2) {
+  color: rgb(192, 0, 0) !important;
+  font-weight: 400 !important;
 }

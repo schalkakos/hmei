@@ -11,7 +11,7 @@ const AddPlayerButton = (props) => {
       <IconContext.Provider value={{ size: "20px" }}>
         <BsPlus />
       </IconContext.Provider>
-      <span>Add New Player</span>
+      <span>Add Player</span>
     </div>
   );
 };
