@@ -26,14 +26,13 @@ const Gameplay = (props) => {
     mapSize,
     mapSize + 1,
   ]);
-  console.log(possibleIconLocations)
-  console.log(typeof mapSize)
 
   useEffect(() => {
     if (resetGame) {
       setResetGame(false);
     }
   }, [resetGame]);
+  console.log(playersData)
 
   const checkWinCondition = (updatedPlayerScore) => {
     if (updatedPlayerScore.length < 5) {
@@ -77,7 +76,7 @@ const Gameplay = (props) => {
         });
       }
     );
-    return isCurrentPlayerWinner ? true: false;
+    return isCurrentPlayerWinner ? true : false;
   };
 
   const changePlayerTurnClickHandler = (id) => {
@@ -127,7 +126,8 @@ const Gameplay = (props) => {
       <div className={styles.Title}>
         <span>{`${currentPlayerData.name}'s turn`}</span>
         <span>
-          with icon: <PlayerIconDisplay icon={currentPlayerData.icon} size="20px"/>
+          with icon:{" "}
+          <PlayerIconDisplay icon={currentPlayerData.icon} size="20px" />
         </span>
       </div>
       <div
@@ -159,8 +159,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Gameplay);
+export default connect(mapStateToProps)(Gameplay);

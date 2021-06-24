@@ -20,7 +20,7 @@ const GameField = (props) => {
     }
   }, [resetGame]);
 
-  const clickHandler = (id) => {
+  const clickHandler = () => {
     if (clickedBy || playerWon) {
       return;
     }
@@ -29,14 +29,9 @@ const GameField = (props) => {
   };
 
   return (
-    <div
-      className={styles.FieldWrapper}
-      onClick={() => {
-        clickHandler(id);
-      }}
-    >
+    <div className={styles.FieldWrapper} onClick={clickHandler}>
       {clickedBy ? (
-        <PlayerIconDisplay icon={clickedBy.icon}  size="20px"/>
+        <PlayerIconDisplay icon={clickedBy.icon} size="20px" />
       ) : (
         <PlayerIconDisplay icon={null} size="20px" />
       )}
